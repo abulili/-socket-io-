@@ -198,15 +198,31 @@ function sendMsg() {
     document.querySelector('.chart-from-value').value = '';
 };
 
+// 引入拼音
+var { pinyin } = pinyinPro;
+// console.log(pinyin('汉语拼音'));
+//要在页面中渲染拼音，首先拿到从服务端广播回来的消息，处理成数组
+// 再进行遍历处理（<ruby><rt></rt><ruby>）
+// 将处理后的拼接到消息中
+
 // 客户端几首服务端广播回来的聊天消息
 // 两边都能拿到消息后就可以开始渲染了
 socket.on('boadCastchart', (data) => {
+
+    // data.value处理 split('|')依旧会是['s','a','b']
+    let messageList = data.value.split('');
+    // 遍历
+    let str = "";
+    messageList.forEach(item => { //更推荐for
+        str += `<ruby>${item}<rt>${pinyin(item)}</rt></ruby>`;
+    })
+
     let msg = '';
     // 看消息是谁发的
     if (data.userName === mainUser.userName) {
         msg = `
         <div class="self-user">
-            <p class="self">${data.value}</p>
+            <p class="self">${str}</p>
             <div><img src="${data.img}" alt=""></div>
         </div>
         `;
@@ -215,7 +231,7 @@ socket.on('boadCastchart', (data) => {
         msg = `
         <div class="other-user">
             <img src="${data.img}" alt="">
-            <p class="friend">${data.value}</p>
+            <p class="friend">${str}</p>
         </div>
             `;
     }
@@ -248,4 +264,5 @@ function scrollBottom(){
     lastItem.scrollIntoView(false)
     lastItem.style.marginBottom = 0
 }
+
 
