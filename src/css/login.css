@@ -1,0 +1,438 @@
+* {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+    box-sizing: border-box;
+}
+
+.tq {
+    position: absolute;
+}
+
+.box {
+    width: 100%;
+    height: 100vh;
+    background: url("../image/m.jpg") no-repeat center/cover;
+    display: flex;
+    /* align-items设置弹性布局的垂直居中 */
+    align-items: center;
+    /* justify-content盒子内部的间距 justify-content: space-around;是盒子内部各元素均匀分布两边同样均匀分布 justify-content: space-between;盒子内部各元素均匀分布两边不留白*/
+    justify-content: center;
+    /* 驼峰命名法 userName clss只能推荐使用user-name _ */
+}
+.login-box {
+    width: 50%;
+    min-height: 500px;
+    height: auto;
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 15px;
+    position: relative;
+    overflow: auto;
+}
+.login {
+    position: absolute;
+    top:10%;
+}
+
+/* fixed固定定位  stiky黏性定位 relative相对定位 absolute绝对定位 */
+
+.form-control {
+    background-color: transparent;
+    width: 70%;
+    color: #735743;
+    border: none;
+    /* 下边框样式 */
+    border-bottom: 1px solid #c09270;
+    padding: 10px 0;
+    text-indent: 10px;
+    margin: 8px 0;
+    font-size: 14px;
+    letter-spacing: 2px;
+}
+
+.form-control::placeholder {
+    color: #735743;
+}
+
+.form-control:focus {
+    color: #735743;
+    outline: none;
+    border-bottom: 1px solid #4c271c;
+    transition: 0.5s;
+}
+
+.form-control:focus::placeholder {
+    opacity: 0;
+}
+.img-List {
+    display: flex;
+    flex-wrap: wrap;
+    /* 第一个元素换行后的内容如何排列 */
+    align-content: flex-start;
+    /* align-items: flex-start; */
+    /* 换行 */
+}
+
+.img-List li {
+    /* flex: 1; */
+}
+
+.icon {
+    position: relative;
+    top:10%;
+    width: 100%;
+    display: flex;
+    /* background-color: #dda05b; */
+}
+/* rem + flex  */
+.img-List li {
+    /* flex: 2em; */
+}
+.img-List img {
+    display: flex;
+    width: 7rem;
+    height: 7rem;
+    border-radius: 50%;
+    padding: 0.5rem;
+    background: no-repeat;
+    overflow: hidden;
+    object-fit: cover;
+    margin-top: 0.5rem;
+    display: block;
+    cursor: pointer;
+}
+img:last-child {
+    margin-right: auto;
+}
+
+/* .box>.login>ul{
+    width: 90%;
+    height: 300px;
+    background-color: #ccc;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    margin: 20px auto;
+}
+.login>ul>li{
+    list-style: none;
+    display: flex;
+    width: 100%;
+    height: 100%;
+    margin:0 28px ;
+    border: 1px solid green;
+}
+.login li>img {
+    display: block;
+    position: relative;
+    height: 100%;
+    width: 100%;
+    background: no-repeat;
+    overflow: hidden;
+    border-radius: 50%;
+    left:38%;
+    top: -30px;
+    object-fit: cover;
+} */
+
+.input-group {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+    top: 10%;
+}
+.checked {
+    /* border: 1px solid black; */
+    border-radius: 50%;
+    width: 6rem;
+    height: 6rem;
+    align-items: center;
+    justify-items: center;
+    display: flex;
+}
+.checked img {
+    box-shadow: 0.1rem 0.4rem 0.4rem 0.4rem rgba(255, 255,255,0.4);
+}
+
+.btnn {
+    position: relative;
+    padding: 10px;
+    top: 20%;
+    background-color: rgba(255, 255, 255, 0.9);
+    color: #dda05b;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    display: block;
+    margin: auto;
+    align-items: center;
+}
+
+.btnn:hover {
+    background: #dda05b;
+    color: #fff;
+}
+
+.content {
+    background-color: #dda05b;
+    height: 90vh;
+    width: 80vh;
+}
+
+.content{
+    width: 800px;
+    height: 561px;
+}
+
+/* boder-radius 圆角 可以传的参数 百分比如果百分比超过百分之五十那么我们的盒子就会变成圆心*/
+
+.title{
+    width: 100%;
+    height: 61px;
+    background-color: #f1f1f1;
+    /* 圆角另外一种方式接受 四个参数 左上 右上 右下 左下 */
+    border-radius: 10px 10px 0 0;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    /* 盒子内部垂直 水平居中 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* 针对块级元素 水平居中可以使用margin：0 auto；文字居中text-align:center 垂直方向的居中使用定位的方式 定位将元素下移百分之五十 然后再使用其他方式（transform）再移回去自身宽度的一半*/
+    /* 绝对定位参照点是 只要有定位属性的元素  */
+}
+
+.title>p{
+    font-size: 16px;
+    /* 设置字体样式比如说 fount-size fount-weight color */
+}
+
+
+
+.bottom-box{
+    width: 100%;
+    height: 500px;
+    display: flex;
+}
+
+/* 用户列表 */
+/* calc 可以计算出我们需要的值 calc( 100% - 5px) 使用calc中间必须要空格*/
+.user-list{
+    width: 200px;
+    height: 100%;
+    background-color: #3b3b3b;
+    overflow: auto;
+}
+
+.user-list>.main{
+    width: 100%;
+    height: 50px;
+    display: flex;
+    align-items: center;
+}
+
+.main>img{
+    display: block;
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    padding: 10px;
+}
+
+
+.text-color{
+    display: block;
+    margin-left: 10px;
+    text-align: center;
+    font-size: 20px;
+    /* 设置背景透明色 */
+    background-image: -webkit-linear-gradient(left, blue,
+            #66ffff 10%, #cc00ff 20%,
+            #CC00CC 30%, #CCCCFF 40%,
+            #00FFFF 50%, #CCCCFF 60%,
+            #CC00CC 70%, #CC00FF 80%,
+            #66FFFF 90%, blue 100%);
+    /* 改变background-size是为了让动画动起来 */
+    background-size: 200% 100%;
+    /* 按照文字拆分背景 */
+    -webkit-background-clip: text;
+    /* 将字体设置成透明色 */
+    -webkit-text-fill-color: transparent;
+    /* 启用动画 */
+    animation: masked-animation 4s linear infinite;
+}
+
+/* 动画  */
+@keyframes masked-animation {
+    0% {
+        background-position: 0 0;
+    }
+
+    100% {
+        background-position: -100% 0;
+    }
+}
+
+.user-list-title{
+    color: #fff;
+    padding: 10px 0 10px 5px;
+    box-shadow: inset -1px -1px 7px 0px #000;
+}
+
+.user-list>ul{
+    width: 100%;
+}
+
+.user-list>ul>li{
+    width: 100%;
+    height: 70px;
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.other-list {
+    padding-left: 0rem;
+}
+
+.other-list>li>img{
+    display: block;
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+}
+/*-------------------- 聊天框---------------- */
+.content-box{
+    width: calc( 100% - 200px );
+    height: 100%;
+    background-color: #f1f1f1;
+}
+.chartlogs{
+    width: 100%;
+    height: 400px;
+    padding: 10px;
+    overflow-y: auto;
+    background-color: #fff;
+}
+.chartlogs>.system-msg{
+    color: #999999;
+    font-size: 12px;
+    text-align: center;
+    margin: 10px 0;
+}
+
+.other-user{
+    width: 100%;
+    height: auto;
+    justify-content: flex-start;
+    display: flex;
+}
+
+.chartlogs img {
+    display: block;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+}
+
+.other-user p,
+.self-user p {
+    padding: 10px;
+    border-radius: 10px;
+    max-width: 300px;
+    height: auto;
+    word-wrap: break-word;
+    word-break: break-all;
+    margin-left: 10px;
+}
+
+.other-user .friend{
+    background-color: #e6e6e6;
+    /* padding: 10px;
+            background-color: #fff;
+            border-radius: 10px;
+            max-width: 300px;
+            height: auto;
+            word-wrap: break-word;
+            word-break: break-all;
+            margin-left: 10px; */
+}
+
+.self-user .self{
+    margin-left: 0;
+    background-color: #dda05b;
+    color: #fff;
+}
+.self-user {
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+    height: auto;
+}
+.self-user img {
+    margin-left: 10px;
+}
+.self-user p {
+    margin-left: 0;
+    background-color: #dda05b;
+    color: #fff;
+}
+
+.chart-from{
+    width: 100%;
+    height: calc( 100% - 400px );
+}
+
+.chart-from-content{
+    width: 100%;
+    height: 35px;
+    display: flex;
+    background-color: #ddd;
+}
+.chart-from-value{
+    width: 523px;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    margin-right: 10px;
+    outline: none;
+}
+.chart-from-btn{
+    height: 47px;
+    width: 47px;
+    text-align: center;
+    padding-top: 10px;
+    background-color: #dda05b;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-left: 5px;
+}
+.chart-form-btn:hover {
+    background: #dda05b;
+    color: #fff;
+}
+
+
+::-webkit-scrollbar {
+    /*滚动条整体样式*/
+    width: 8px;
+    /*高宽分别对应横竖滚动条的尺寸*/
+    height: 1px;
+}
+
+::-webkit-scrollbar-thumb {
+    /*滚动条里面小方块*/
+    border-radius: 10px;
+    box-shadow: inset 0 0 5px rgba(97, 184, 179, 0.1);
+    background: #ccc;
+}
+
+::-webkit-scrollbar-track {
+    /*滚动条里面轨道*/
+    box-shadow: inset 0 0 5px rgba(87, 175, 187, 0.1);
+    border-radius: 10px;
+    background: #ededed;
+}

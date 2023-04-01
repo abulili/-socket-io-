@@ -1,0 +1,227 @@
+ npm i express导入node_modules npm i socket.io
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        .box {
+            width: 100%;
+            height: 100vh;
+            background: url("../image/m.jpg") no-repeat center/cover;
+            display: flex;
+            /* align-items设置弹性布局的垂直居中 */
+            align-items: center;
+            /* justify-content盒子内部的间距 justify-content: space-around;是盒子内部各元素均匀分布两边同样均匀分布 justify-content: space-between;盒子内部各元素均匀分布两边不留白*/
+            justify-content: space-around;
+            /* 驼峰命名法 userName clss只能推荐使用user-name _ */
+        }
+        .content {
+            height: 561px;
+            width: 80%;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 10px 10px 0 0;
+            /* background-color: pink; */
+        }
+        .title {
+            width: 100%;
+            height: 61px;
+            background-color: #f1f1f1;
+            border-radius: 10px 10px 0 0;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            /* 针对块级元素 水平居中-margin:0 auto;
+                使用定位，麻烦一点
+            */
+        }
+        /* calc 可以计算出需要的值 calc(100% - 5px) */
+        /* 绝对定位的参照点：上级元素只要有定位元素就行 */
+        .bottom-box {
+            width: 100%;
+            height:500px;
+            display: flex;
+        }
+        .user-list {
+            width: 200px;
+            height: 500px;
+            background: #3b3b3b;
+        }
+        .user-list > .main {
+            width: 100%;
+            height: 50px;
+            background-color: #3b3b3b;
+
+            align-items: center;
+            justify-content: center;
+            background-color: #3b3b3b;
+        }
+        .main > img, 
+        img
+         {
+            /* 不超过三层 */
+            display: block;
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+        }
+        .main > span {
+            display: block;
+            margin-left: 10px;
+            text-align: center;
+        }
+        
+        /* 定义动画 */
+
+        .content-box {
+            /* width: cal(100% - 10vh); */
+            width: 70vh;
+            height: 500px;
+            background-color: #f1f1f1;
+        }
+        .title >p {
+            font-size: 16px;
+        }
+        .chartlogs {
+            width: 100%;
+            height: 400px;
+            padding: 10px;
+            overflow-y: auto;
+            background-color: palegoldenrod;
+        }
+        .chartlogs .system-msg {
+            text-align: center;
+            font-size: 12px;
+            margin-bottom: 10px;
+            color: #999;
+        }
+        .chart-form {
+            width: 100%;
+            height: calc( 100% - 400px);
+            background-color: blue;
+            display: flex;
+        }
+        .chart-form-content {
+            width: 100%;
+            height: 35px;
+            background-color: #ddd;
+        }
+        .chart-form-value {
+            flex: 1;
+            width: 60vh;
+            
+            /* width: 100%;
+            height: 100%; */
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            margin-right: 10px;
+            outline: none;
+        }
+        .chart-form-btn {
+            width: 47px;
+            height: 47px;
+            padding-top: 10px;
+            background-color: rgba(255, 255, 255, 0.9);
+            color: #dda05b;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: center;
+            margin-left: 5px;
+        }
+        .chart-form-btn:hover {
+            background: #dda05b;
+            color: #fff;
+        }
+        .other-user {
+            width: 100%;
+            height: auto;
+            /* 放一行显示 */
+            display: flex;
+        }
+        .chartlogs img {
+            display: block;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+        }
+        .friend {
+            padding: 10px;
+            background-color: #fff;
+            border-radius: 10px;
+            max-width: 300px;
+            height: auto;
+            word-wrap: break-word;
+            word-break: break-all;
+            margin-left: 10px;
+        }
+        .self-user {
+            width: 100%;
+            height: auto;
+            display: flex;
+            justify-content: flex-end;
+        }
+        .self-user img {
+            margin-left: 10px;
+        }
+        .self-user p {
+            margin-left: 0;
+            background-color: #dda05b;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <div class="content">
+            <div class="title">
+                <p>聊天室(<span>99</span>)人</p>
+            </div>
+            <div class="bottom-box">
+                <div class="user-list">
+                    <div class="main">
+                        <img src="./image/m.jpg" alt="">
+                        <span>用户一</span>
+                    </div>
+                    <div class="user-list-title">
+                        用户列表
+                    </div>
+                    <ul class="other-list">
+                        <li>
+                            <img src="./image/m.jpg" alt="">
+                            <span>用户一</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="content-box">
+                    <!-- 聊天框 -->
+                    <div class="chartlogs">
+                        <p class="system-msg">"用户一"进入聊天室</p>
+                        <div class="other-user">
+                            <img src="./image/m.jpg" alt="">
+                            <p class="friend">你好，小薯片在吗？</p>
+                        </div>
+                        <div class="self-user">
+                            <p class="friend">honey muamua</p>
+                            <img src="./image/m.jpg" alt="">
+                        </div>
+                    </div>
+                    <div class="chart-form">
+                        <div class="chart-form-content">
+                            <input type="text" class="chart-form-value"  placeholder="请输入消息...">
+                            <div class="chart-form-btn" onclick="sendMsg()">发送</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
