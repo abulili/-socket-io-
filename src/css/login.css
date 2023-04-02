@@ -321,6 +321,12 @@ img:last-child {
     text-align: center;
     margin: 10px 0;
 }
+.chartlogs .chat-img {
+    display: block;
+    border-radius: 0%;
+    width: 100%;
+    height: 100%;
+}
 
 .other-user{
     width: 100%;
@@ -382,6 +388,34 @@ img:last-child {
 .chart-from{
     width: 100%;
     height: calc( 100% - 400px );
+}
+
+/* 功能区域样式 */
+.fun {
+    width: 100%;
+    height: 20px;
+    /* padding: 10px; */
+    display: flex;
+    /* background-color: #00FFFF; */
+    /* 用calc剪掉 */
+    /* height: calc( 100% - 75px ); */
+}
+
+.fun > #file {
+    display: none;
+}
+
+.fun > label{
+    width: 20px;
+    height: 20px;
+    margin-left: 10px;
+}
+
+.fun > label > img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
 }
 
 .chart-from-content{

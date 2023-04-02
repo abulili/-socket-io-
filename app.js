@@ -41,6 +41,11 @@ io.on('connection', function (socket) {
         // 将接收到的消息广播给客户端
         io.emit('boadCastchart', data);
     })
+    // 接收客户端发来的表情图片并广播
+    socket.on('sendImg', (data) => {
+        io.emit('boadCastEmoji', data);
+    })
+    
     // api 当用户断开链接时触发
     socket.on("disconnect", () => {
         // 从数组中删除元素 slice改变了原数组

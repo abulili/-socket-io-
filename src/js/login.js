@@ -113,19 +113,26 @@ let mainUser = '';
 btn.onclick = function login() {
     let loginBox = document.querySelector('.login-box');
     let content = document.querySelector('.content');
-    loginBox.style.display = 'none';
-    content.style.display = 'block';
+
     // 获取当前登录框中输入的用户名和选择的头像 放进一个对象里 发送到服务器
     let value = document.querySelector('.form-control').value;
-    let src = document.querySelector('.checked>img').src;
-    mainUser = { userName: value, img: src };
-    // console.log(mainUser);
-    // socket.io里通信的两个方法 emit发送 on接收
-    socket.emit('login', mainUser);
-    let mainBox = document.querySelector('.main');
-    mainBox.innerHTML = `<img src="${mainUser.img}">
-                        <span class="text-color">${mainUser.userName}</span>
-                        `;
+    if (value != "") {
+        if (document.querySelector('.checked>img')) {
+            let src = document.querySelector('.checked>img').src;
+            mainUser = { userName: value, img: src };
+            // console.log(mainUser);
+            // socket.io里通信的两个方法 emit发送 on接收
+            socket.emit('login', mainUser);
+            let mainBox = document.querySelector('.main');
+            mainBox.innerHTML = `<img src="${mainUser.img}">
+                                <span class="text-color">${mainUser.userName}</span>
+                                `;
+            loginBox.style.display = 'none';
+            content.style.display = 'block';
+        }
+        else alert("请选择头像");
+    }
+    else alert("请输入用户名并选择头像");
 }
 // 定义一个方法去渲染用户列表
 function createUserList(msg){
@@ -256,6 +263,50 @@ socket.on('escUser',(data)=>{
     scrollBottom()
 
 })
+
+//发送图片
+//input-file 需要转换图片格式  fileReader读取文件 fileReader中的方法读取到文件格式转化base64（因为src可以直接传入）
+var file = document.querySelector('#file');
+file.onchange = (e) => {
+    let emoji = e.target.files[0];
+    let fr = new FileReader();
+    fr.readAsDataURL(emoji);
+    // 使用fr.result获取信息后进行发送给服务端后，服务端进行广播
+    fr.onload = function () {
+        // 解构赋值
+        let emojiObj = { ...mainUser, file: fr.result };
+        socket.emit('sendImg', emojiObj);
+    }
+}
+
+// 接受一下服务端广播回来的信息
+socket.on('boadCastEmoji',(data)=>{
+    let msg = ''
+    // 第一步 判断一下拿回来的消息是谁发的 如果是自己发的 显示在右边创建的是自己发送的消息 如果是别人发的那就对应渲染别人发的消息样式
+    if (data.userName === mainUser.userName) {
+        msg = `<div class="other-user self-user">
+                            <p class="self"><img class="chat-img" src="${data.file}" alt=""></p>
+                            <div><img src="${data.img}" alt=""></div>
+                        </div>`
+    }
+    else {
+        msg = `<div class="other-user">
+                            <img src="${data.img}" alt="">
+                           <p class="friend"><img class="chat-img" src="${data.file}" alt="" ></p>
+                        </div>`
+    }
+    let flag = document.createRange().createContextualFragment(msg)
+    document.querySelector('.chartlogs').append(flag)
+})
+
+// 回车发送消息
+window.onload = () => {
+    document.onkeydown = (e) => {
+        if (e.keyCode == 13) {
+            sendMsg();
+        }
+    }
+}
 
 
 // 定义一个将最后一个元素滚动到底部发方法使用scrollintoview
