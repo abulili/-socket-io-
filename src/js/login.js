@@ -110,6 +110,7 @@ createLi();
 let btn = document.querySelector('.btnn');
 // 全局变量 保存当前用户的名字和头像
 let mainUser = '';
+let userObj = {};
 btn.onclick = function login() {
     let loginBox = document.querySelector('.login-box');
     let content = document.querySelector('.content');
@@ -144,13 +145,13 @@ function createUserList(msg){
                     <span class="text-color">${item.userName}</span>
                 </li>`
     })
-    otherList.innerHTML = str
+    otherList.innerHTML = str;
 }
 
 // 定义一个方法动态渲染聊天室当前在线人数
 function createTitle(num) {
-    let title = document.querySelector('.title')
-    title.innerHTML = `<p>聊天室<span>(${num}人)</span></p>`
+    let title = document.querySelector('.title>p')
+    title.innerHTML = `<span>聊天室(${num}人)</span>`
 }
 
 // 获取服务端发回的用户信息列表 当用户列表发生改变 有用户进入聊天室的时候我们调用createTitle的方法重新渲染页面title的人数
@@ -194,15 +195,28 @@ socket.on('sendMain', (data) => {
 
 function sendMsg() {
     // 获取用户聊天框中输入的内容
-    let msgValue = document.querySelector('.chart-from-value').value;
-    // console.log(msgValue);
+    let msgValue = document.querySelector('.chart-from-value').innerHTML;
+    console.log(msgValue);
+    let len = msgValue.length;
+    let msgReal = '';
+    for (var i = 0; i < len; ++i) {
+        if (msgValue[i] == '<') {
+            mainUser.value = msgReal;
+            let src = msgValue.substring(i + 29, i + 47);
+            msgReal += '<' + src + '>';
+            i += 48;
+        }
+        else {
+            msgReal += msgValue[i];
+        }
+    }
     if(msgValue!==''){
-        mainUser.value = msgValue;
+        mainUser.value = msgReal;
             // 将mainUser广播
         socket.emit('sendMessage', mainUser);
     }
     // 当消息发送成功后清空聊天框中的输入内容
-    document.querySelector('.chart-from-value').value = '';
+    document.querySelector('.chart-from-value').innerHTML = '';
 };
 
 // 引入拼音
@@ -220,10 +234,21 @@ socket.on('boadCastchart', (data) => {
     let messageList = data.value.split('');
     // 遍历
     let str = "";
-    messageList.forEach(item => { //更推荐for
-        str += `<ruby>${item}<rt>${pinyin(item)}</rt></ruby>`;
-    })
-
+    console.log(messageList);
+    for (var i = 0; i < messageList.length; ++i){
+        let temp = '';
+        if (messageList[i] == '<') {
+            ++i;
+            while (messageList[i] != '>') {
+                temp += messageList[i];
+                ++i;
+            }
+            str += `<img src="${temp}">`;
+            temp = '';
+        }
+        else str += `<ruby>${messageList[i]}<rt>${pinyin(messageList[i])}</rt></ruby>`;
+    }
+    console.log(str);
     let msg = '';
     // 看消息是谁发的
     if (data.userName === mainUser.userName) {
@@ -279,9 +304,27 @@ file.onchange = (e) => {
     }
 }
 
+var emoji = document.querySelector('.btn1');
+emoji.onclick = (e) => {
+    $(".chart-from-value").emoji({
+        button: "#btn1",
+        showTab: false,
+        animation: 'slide',
+        position: 'topLeft',
+        icons: [{
+            name: "QQ表情",
+            path: "dist/img/qq/",
+            maxNum: 91,
+            excludeNums: [41, 45, 54],
+            file: ".gif"
+        }]
+    });
+}
+
+
 // 接受一下服务端广播回来的信息
 socket.on('boadCastEmoji',(data)=>{
-    let msg = ''
+    let msg = '';
     // 第一步 判断一下拿回来的消息是谁发的 如果是自己发的 显示在右边创建的是自己发送的消息 如果是别人发的那就对应渲染别人发的消息样式
     if (data.userName === mainUser.userName) {
         msg = `<div class="other-user self-user">
@@ -308,12 +351,77 @@ window.onload = () => {
     }
 }
 
+// promise承诺  因为请求是异步的
+// resolve成功 padding等待 reject失败
+// aync await
+// 异步代码写成同步的形式 awit后面跟的就是一个promise对象
+// 第一步 new Promise(resolve, reject)=>(异步任务（请求， 定时器） resolve（返回成功的动作）)
+// 当使用.then的时候可以拿到resolve返回的结果，catch可以拿到reject返回的结果
 
 // 定义一个将最后一个元素滚动到底部发方法使用scrollintoview
-function scrollBottom(){
+function scrollBottom() {
     let lastItem = document.querySelector('.chartlogs').lastElementChild;
     lastItem.scrollIntoView(false)
     lastItem.style.marginBottom = 0
 }
 
+// 实现文字转语音效果
+// 利用h5新增的speechSynthesis
 
+
+// 先定义一个变量接收speechSynthesis
+let synth = window.speechSynthesis;
+// 定义一个方法接收语音包
+
+function setSpeech() {
+    // 什么是promise 就是一个承诺 
+    // 我们的请求是异步的
+    // resolve成功状态 pedding等待状态 rejected失败
+    // async await 
+    // 异步代码写成同步的形式 await后面跟的就是一个promise对象 
+    // 第一步 new Promise(resolve,reject)=>{异步任务(请求、定时器) resolve(返回成功的结果)或reject
+    // 当使用.then的时候可以拿到resolve返回的结果,catch可以拿到reject返回的结果}
+    return new Promise(
+        function (resolve, reject) {
+            let id;
+
+            id = setInterval(() => {
+                if (synth.getVoices().length !== 0) {
+                    resolve(synth.getVoices());
+                    clearInterval(id);
+                }
+            }, 10);
+        }
+    )
+}
+
+let voice = null
+let voiceList = document.querySelector('#speachSelect')
+
+// 定义一个方法生成option
+function createOption(){
+    voice.forEach(item=>{
+        let selected = item.name ==="Microsoft Huihui - Chinese (Simplified, PRC)" ? "selected":""
+        let option = `<option value="${item.name}" ${selected}>${item.name}(${item.lang})</option>`
+        // 将模板字符串解析为dom元素并插在最后一个子元素后
+        voiceList.insertAdjacentHTML("beforeend", option)
+        
+    }) 
+}
+
+let s = setSpeech();
+s.then((voices) => {
+    voice = voices;
+    createOption();
+}); 
+
+// 定义一个方法将文字合成为语音
+function textTospeech(text){
+    let utterance = new SpeechSynthesisUtterance(text)
+    voice.forEach(item=>{
+        if(item.name === voiceList.value){
+            utterance.voice = item;
+        }
+    })
+    synth.speak(utterance);
+}

@@ -45,7 +45,6 @@ io.on('connection', function (socket) {
     socket.on('sendImg', (data) => {
         io.emit('boadCastEmoji', data);
     })
-    
     // api 当用户断开链接时触发
     socket.on("disconnect", () => {
         // 从数组中删除元素 slice改变了原数组
