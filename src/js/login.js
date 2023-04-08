@@ -234,7 +234,8 @@ socket.on('boadCastchart', (data) => {
     let messageList = data.value.split('');
     // 遍历
     let str = "";
-    console.log(messageList);
+    let speaker = "";
+    // console.log(messageList);
     for (var i = 0; i < messageList.length; ++i){
         let temp = '';
         if (messageList[i] == '<') {
@@ -243,27 +244,31 @@ socket.on('boadCastchart', (data) => {
                 temp += messageList[i];
                 ++i;
             }
+            if(temp != '')
             str += `<img src="${temp}">`;
             temp = '';
         }
-        else str += `<ruby>${messageList[i]}<rt>${pinyin(messageList[i])}</rt></ruby>`;
+        else {
+            str += `<ruby>${messageList[i]}<rt>${pinyin(messageList[i])}</rt></ruby>`;
+            speaker += messageList[i];
+        }
     }
-    console.log(str);
+    console.log(speaker);
     let msg = '';
     // 看消息是谁发的
     if (data.userName === mainUser.userName) {
         msg = `
-        <div class="self-user">
-            <p class="self">${str}</p>
+        <div class="self-user" onclick=textTospeech('${speaker}')>
+            <p class="self" >${str}</p>
             <div><img src="${data.img}" alt=""></div>
         </div>
         `;
     }
     else {
         msg = `
-        <div class="other-user">
+        <div class="other-user" onclick=textTospeech('${speaker}')>
             <img src="${data.img}" alt="">
-            <p class="friend">${str}</p>
+            <p class="friend" >${str}</p>
         </div>
             `;
     }
@@ -416,8 +421,9 @@ s.then((voices) => {
 }); 
 
 // 定义一个方法将文字合成为语音
-function textTospeech(text){
-    let utterance = new SpeechSynthesisUtterance(text)
+function textTospeech(text) {
+    let utterance = new SpeechSynthesisUtterance(text);
+    // alert(text);
     voice.forEach(item=>{
         if(item.name === voiceList.value){
             utterance.voice = item;
